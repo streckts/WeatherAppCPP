@@ -7,6 +7,7 @@
 #include "weather.h"
 #include "../lib/json.hpp"
 
+using namespace std;
 using json = nlohmann::json;
 
 // Callback to process API response
@@ -16,7 +17,7 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *use
 }
 
 // Function to fetch weather data
-void fetchWeatherData(double lat, double lon, const std::string& apiKey) {
+std::string fetchWeatherData(double lat, double lon, const std::string& apiKey) {
     CURL *curl;
     CURLcode res;
     std::string readBuffer;
@@ -40,14 +41,11 @@ void fetchWeatherData(double lat, double lon, const std::string& apiKey) {
         res = curl_easy_perform(curl);
         if(res != CURLE_OK) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-        } else {
-            std::cout << "Weather data: " << readBuffer << std::endl;
         }
-
         // Cleanup
         curl_easy_cleanup(curl);
     }
-    curl_global_cleanup();
+    return readBuffer;
 }
 
 
